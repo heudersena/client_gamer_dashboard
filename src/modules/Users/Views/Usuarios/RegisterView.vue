@@ -1,3 +1,34 @@
+<script setup>
+import { RouterLink } from "vue-router"
+import { ref } from "vue";
+import * as Yup from "yup";
+import { Form, Field } from "vee-validate";
+import { useRegisterStore } from "@/stores";
+
+const schema = Yup.object().shape({
+    email: Yup.string()
+        .email("E-mail inválido")
+        .required("O E-mail é obrigatório"),
+    password: Yup.string().required("O campo senha é obrigátório"),
+    lastname: Yup.string().required("O campo primeiro nome é obrigátório"),
+    firstname: Yup.string().required("O campo segundo nome é obrigátório"),
+    phone: Yup.string().required("O campo telefone é obrigátório"),
+    KeyPix: Yup.string().required("O campochave pix é obrigátório"),
+});
+
+
+function onSubmit(values, { setErrors }) {
+    const authRegister = useRegisterStore();
+    console.log(values);
+    const { password, lastname, firstname, email, phone, KeyPix } = values;
+    return authRegister.register(password, lastname, firstname, email, phone, KeyPix)
+}
+
+
+
+</script>
+
+
 <template>
     <div class="form-geral">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark h-">
@@ -28,109 +59,67 @@
             <!-- formulario -->
             <div class="row g-5 justify-content-center">
                 <div class="col-lg-8 mt-0">
-                    <form class="needs-validation bhg-box-1" novalidate>
+                    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }"
+                        class="needs-validation bhg-box-1" novalidate>
                         <div class="row g-3">
                             <div class="col-sm-6">
-                                <label for="Nome" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="Nome" placeholder="" value="" required>
-                                <div class="invalid-feedback">Preencha com um nome válido.</div>
+                                <label for="email" class="form-label">E-mail</label>
+                                <Field type="text" class="form-control" name="email" />
+                                <div class="text-danger">{{ errors.email }}</div>
                             </div>
 
                             <div class="col-sm-6">
-                                <label for="Sobrenome" class="form-label">Sobrenome</label>
-                                <input type="text" class="form-control" id="Sobrenome" placeholder="" value="" required>
-                                <div class="invalid-feedback">Sobrenome válido obrigatório</div>
+                                <label for="password" class="form-label">Senha</label>
+                                <Field type="text" class="form-control" name="password" />
+                                <div class="text-danger">{{ errors.password }}</div>
                             </div>
 
                             <div class="col-sm-12">
-                                <label for="email" class="form-label">E-mail</label>
-                                <input type="email" class="form-control" id="email" placeholder="seu@email.com" required>
-                                <div class="invalid-feedback">Preencha com um e-mail válido.</div>
+                                <label for="lastname" class="form-label">Nome</label>
+                                <Field type="text" name="lastname" class="form-control" />
+                                <div class="text-danger">{{ errors.lastname }}</div>
                             </div>
 
                             <div class="col-sm-4">
-                                <label for="tel" class="form-label">Celular</label>
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                    <input type="text" class="form-control" id="tel" placeholder="(DDD) 9999-9999" required>
-                                    <div class="invalid-feedback">Celular obrigatório.</div>
-                                </div>
+                                <label for="firstname" class="form-label">Sobrenome</label>
+                                    <Field type="text" name="firstname" class="form-control" />
+                                    <div class="text-danger">{{ errors.firstname }}</div>
                             </div>
 
                             <div class="col-sm-4">
-                                <label for="username" class="form-label">Senha</label>
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
-                                    <input type="text" class="form-control" id="senha-1" placeholder="Senha" value=""
-                                        required>
-                                    <div class="invalid-feedback">Senha obrigatório.</div>
-                                </div>
+                                <label for="phone" class="form-label">Celular</label>
+                                    <Field type="text" class="form-control" name="phone" />
+                                    <div class="text-danger">{{ errors.phone }}</div>
                             </div>
 
                             <div class="col-sm-4">
-                                <label for="senha" class="form-label">Confirmar senha</label>
-                                <div class="input-group has-validation">
-                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
-                                    <input type="password" class="form-control" id="senha-2" placeholder="Nova Senha"
-                                        required>
-                                    <div class="invalid-feedback">Senha obrigatória.</div>
-                                </div>
+                                <label for="senha" class="form-label">Chave Pix</label>
+                                    <Field type="text" class="form-control" name="KeyPix" />
+                                    <div class="text-danger">{{ errors.KeyPix }}</div>
                             </div>
                         </div>
 
-                        <hr class="my-4">
+                       <div class="mt-5">
+                       <button :disabled="isSubmitting" class="w-100 btn btn-primary btn-lg">Cadastrar</button>
+                       </div>
 
-                        <h4 class="mb-3">Chave PIX</h4>
-                        <div class="row my-3">
-                            <div class="col-md-6 mb-3">
-                                <label for="" class="form-label">Tipo de Chave</label>
-                                <div class="col pt-1">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio1" value="option1">
-                                        <label class="form-check-label" for="inlineRadio1">CPF / CNPJ</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio2" value="option2">
-                                        <label class="form-check-label" for="inlineRadio2">E-mail</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio3" value="option3">
-                                        <label class="form-check-label" for="inlineRadio3">Celular</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="chave-pix" class="form-label">Chave PIX</label>
-                                <input type="text" class="form-control" id="chave-pix" placeholder="" required>
-                                <div class="invalid-feedback">Digite uma chave válida.</div>
-                            </div>
-                        </div>
-                        <hr class="my-4">
-                        <a class="w-100 btn btn-primary btn-lg" href="home.html"><i class="far fa-edit"></i> Cadastrar</a>
-                    </form>
+                    </Form>
                 </div>
             </div>
             <!-- formularioEnd -->
         </div>
-        <footer class="text-center">
+        <!-- <footer class="text-center">
             <div class="golden-line"></div>
             <p class="mb-1">&copy; 2023 CORINGA GAMES.</p>
-        </footer>
+        </footer> -->
     </div>
 </template>
 
-<script setup>
 
-import { RouterLink } from "vue-router"
-
-</script>
 
 <style scoped>
 * {
-    color: aliceblue;
+
 }
 
 .form-geral {
