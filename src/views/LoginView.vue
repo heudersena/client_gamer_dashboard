@@ -22,7 +22,6 @@
                     :class="{ 'is-invalid': errors.password }" />
                 <div class="text-red-300">{{ errors.password }}</div>
             </div>
-
             <div class="space-x-4">
                 <button :disabled="isSubmitting"
                     class="mt-6 inline-flex items-center justify-center border focus:outline-none transition ease-in-out font-medium dark:font-semibold rounded-lg duration-150 text-white dark:text-teal-900 bg-[#F9A826] hover:bg--[#F9A826]/20 border--[#F9A826] text-sm px-4 py-2">

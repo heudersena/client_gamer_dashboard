@@ -57,7 +57,8 @@ function onSubmit(values, { setErrors }) {
         <span class="text-white"> {{ errors.password }}</span>
       </div>
       <div class="mb-3">
-        <a href="cadastro.html" title="" class="link-conta">Já possui uma conta?</a>
+        <!-- <a href="/register" title="" class="link-conta"></a> -->
+        <RouterLink to="register" class="link-conta">Já possui uma conta?</RouterLink>
       </div>
       <div>
         <button

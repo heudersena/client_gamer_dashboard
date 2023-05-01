@@ -9,8 +9,8 @@ import DashboardLayout from "../components/Layout/DashboardLayout"
 import LoginLayout from "../components/Layout/LoginLayout"
 import MeLayout from "../components/Layout/MeLayout"
 
-import LoginView from "../modules/Users/Views/LoginView.vue"
-import RegisterView from "../modules/Users/Views/RegisterView.vue"
+import LoginView from "../modules/Users/Views/Usuarios/LoginView.vue"
+import RegisterView from "../modules/Users/Views/Usuarios/RegisterView.vue"
 
 export const router = createRouter({
     history: createWebHistory(),
@@ -64,6 +64,7 @@ export const router = createRouter({
         },
         {
             path: '/register',
+            name: "register",
             component: RegisterView
         }
     ]
