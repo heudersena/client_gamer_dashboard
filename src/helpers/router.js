@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 
-import { HomeView, DespositView, SaqueView, MeView } from '@/views';
+import { HomeView, DespositView, SaqueView } from '@/views';
 
 import Guard from "../service/middleware"
 
@@ -11,6 +11,7 @@ import MeLayout from "../components/Layout/MeLayout"
 
 import LoginView from "../modules/Users/Views/Usuarios/LoginView.vue"
 import RegisterView from "../modules/Users/Views/Usuarios/RegisterView.vue"
+import MeView from "../modules/Me/Views/MeView.vue"
 
 export const router = createRouter({
     history: createWebHistory(),
@@ -23,9 +24,9 @@ export const router = createRouter({
             beforeEnter: Guard.redirectIfNotAuthenticated,
             children: [
                 {
-                    path: "/",
+                    path: "",
                     name: "index",
-                    component: HomeView
+                    component: MeView
                 },
                 {
                     path: "/deposit",

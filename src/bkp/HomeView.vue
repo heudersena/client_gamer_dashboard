@@ -25,7 +25,6 @@ const { state: transactions, transactionIsLoading } = useAsyncState(api.post("/t
 onMounted(() => {
     socket.on("new-deposit", data => {
         transactions.value = data.new_array
-        console.log(data.new_array);
     })
 })
 
