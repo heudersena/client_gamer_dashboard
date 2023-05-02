@@ -3,7 +3,6 @@ import { createPinia } from 'pinia';
 import VueSocketIO from 'socket.io-client'
 import Toast from "vue-toastification";
 import { VueQueryPlugin } from "vue-query";
-import Chakra from '@chakra-ui/vue'
 import "vue-toastification/dist/index.css";
 
 import './assets/css/bootstrap.min.css'
@@ -29,5 +28,4 @@ app.use(Toast)
 app.use(createPinia());
 app.use(router);
 app.use(VueQueryPlugin)
-app.use(Chakra)
 app.mount('#app');
