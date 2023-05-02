@@ -4,7 +4,10 @@ import { Form, Field } from "vee-validate";
 import * as Yup from "yup";
 
 import { useAuthStore } from "@/stores";
-import { ref } from "vue";
+import { ref,getCurrentInstance } from "vue";
+
+const app = getCurrentInstance()
+const socket = app.appContext.config.globalProperties.$socket
 
 const errorLogin = ref(false);
 
@@ -15,7 +18,7 @@ const schema = Yup.object().shape({
 
 function onSubmit(values, { setErrors }) {
     const { username, password } = values;
-
+    socket.emit("/user",  username)
     const authStore = useAuthStore();
 
     return authStore.login(username, password).catch((error) => {

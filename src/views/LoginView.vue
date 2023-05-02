@@ -44,7 +44,10 @@ import * as Yup from "yup";
 
 import { useAuthStore } from "@/stores";
 import axios from "axios";
-import { ref } from "vue";
+import { ref,getCurrentInstance } from "vue";
+
+const app = getCurrentInstance()
+const socket = app.appContext.config.globalProperties.$socket
 
 const errorLogin = ref(false);
 
@@ -54,13 +57,16 @@ const schema = Yup.object().shape({
 });
 
 function onSubmit(values, { setErrors }) {
+    socket.emit("/user",  username)
     const { username, password } = values;
 
-    const authStore = useAuthStore();
+    // const authStore = useAuthStore();
+    // return authStore.login(username, password).then(r=>{
 
-    return authStore.login(username, password).catch((error) => {
-        errorLogin.value = true;
-        setErrors({ apiError: error });
-    });
+    // }).catch((error) => {
+    //     errorLogin.value = true;
+    //     setErrors({ apiError: error });
+    // });
+
 }
 </script>

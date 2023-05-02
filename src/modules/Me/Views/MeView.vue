@@ -7,7 +7,7 @@ import { StatusTransaction } from "../../../plugins/enums/StatusTransaction"
 import { TypeTransaction } from "../../../plugins/enums/TypeTransaction"
 import { MoedaBR } from "../../../plugins/convertToMoedaAndDate"
 import { DateTimeConvert } from "../../../plugins/DateTimeConvert"
-
+import ModalDeposito from "./ModalDeposito.vue"
 import { useAuth } from "../../../composables/useAuth"
 
 const { users } = useAuth()
@@ -23,14 +23,10 @@ const { state: transactions, isLoading } = useAsyncState(api.post("/transaction"
 
 onMounted(() => {
     socket.on("new-deposit", data => {
+        console.log(data);
         transactions.value = data.new_array
     })
 })
-
-if (!isLoading) {
-    console.log(transactions.value);
-
-}
 
 const openOrClose = ref(false)
 function FnOpenOrClose() {
@@ -78,9 +74,7 @@ function FnOpenOrClose() {
             style="z-index: 100;">
             <button @click="FnOpenOrClose" class="position-absolute top-0 end-0 btn text-white"
                 style="margin-top: 10px; margin-right: 5px; color: aliceblue !important; font-weight: 700;">X</button>
-                <div>
-                    Bora!
-                </div>
+                <ModalDeposito/>
         </div>
         <div class="row">
             <div class="col">

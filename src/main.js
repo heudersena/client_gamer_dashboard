@@ -22,6 +22,7 @@ const socketIo = VueSocketIO("http://192.168.0.111:4005")
 if (!socketIo.socket) {
     socketIo.connect();
 }
+console.log(socketIo);
 app.config.globalProperties.$socket = socketIo
 
 app.use(Toast)
