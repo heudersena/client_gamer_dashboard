@@ -1,7 +1,7 @@
 <script setup>
 import { useAsyncState } from "@vueuse/core"
 import { getCurrentInstance, onMounted, ref } from 'vue'
-
+import { useAuthStore } from "@/stores";
 import api from "../../../plugins/axios";
 import { StatusTransaction } from "../../../plugins/enums/StatusTransaction"
 import { TypeTransaction } from "../../../plugins/enums/TypeTransaction"
@@ -11,6 +11,7 @@ import ModalDeposito from "./ModalDeposito.vue"
 import { useAuth } from "../../../composables/useAuth"
 
 const { users } = useAuth()
+const { logout } = useAuthStore()
 
 const app = getCurrentInstance()
 const socket = app.appContext.config.globalProperties.$socket
@@ -23,7 +24,6 @@ const { state: transactions, isLoading } = useAsyncState(api.post("/transaction"
 
 onMounted(() => {
     socket.on("new-deposit", data => {
-        console.log(data);
         transactions.value = data.new_array
     })
 })
@@ -57,10 +57,10 @@ function FnOpenOrClose() {
                                 class="fas fa-comment-dollar"></i> Saque</a>
                     </li>
                     <li class="nav-item">
-                        <a  @click="FnOpenOrClose" class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#mais-cred"><i
-                                class="fas fa-coins"></i> Depósito</a>
+                        <a @click="FnOpenOrClose" class="nav-link" href="#" data-bs-toggle="modal"
+                            data-bs-target="#mais-cred"><i class="fas fa-coins"></i> Depósito</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="login.html"><i class="fas fa-sign-out-alt"></i> SAIR</a>
+                    <li class="nav-item"><a class="nav-link" href="#" @click="logout"><i class="fas fa-sign-out-alt"></i> SAIR</a>
                     </li>
                 </ul>
             </div>
@@ -70,11 +70,11 @@ function FnOpenOrClose() {
 
     <main class="container mt-5">
         <div v-if="openOrClose"
-            class="position-absolute min-vh-100  w-25 top-0  end-0 bottom-0 d-flex flex-column bg-secondary justify-content-center align-items-center"
-            style="z-index: 100;">
+            class="position-absolute min-vh-100  w-100 top-0  end-0 bottom-0 d-flex flex-column justify-content-center align-items-center"
+            style="z-index: 100; background-color: #513d29;">
             <button @click="FnOpenOrClose" class="position-absolute top-0 end-0 btn text-white"
                 style="margin-top: 10px; margin-right: 5px; color: aliceblue !important; font-weight: 700;">X</button>
-                <ModalDeposito/>
+            <ModalDeposito />
         </div>
         <div class="row">
             <div class="col">
@@ -131,6 +131,7 @@ function FnOpenOrClose() {
                             <div class="col-data">Data</div>
                             <div class="col-op">Operação</div>
                             <div class="col-status">Status</div>
+                            <div>Pagamento</div>
                         </li>
                         <li v-for="(transaction, i) in transactions" :key="i">
                             <div class="col-valor">{{ MoedaBR(transaction?.balance) }}</div>
@@ -138,10 +139,12 @@ function FnOpenOrClose() {
                             <div class="col-op">{{ TypeTransaction(transaction?.type_transaction) }}</div>
                             <div class="col-status"><span class="badge bg-warning rounded-pill me-1"> {{
                                 StatusTransaction(transaction?.mercado_pago_transaction_status) }}</span></div>
+                                <div>  <a :href="transaction?.MercadoPago[0].m_ticket_url" target="_blank" rel="noopener noreferrer">Abrir</a> </div>
                         </li>
                     </div>
                 </ul>
             </div>
+
             <!-- Listagem das movimentações -->
         </div>
     </main>

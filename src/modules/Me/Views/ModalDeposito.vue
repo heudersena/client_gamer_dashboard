@@ -1,5 +1,5 @@
 <script setup>
-import { ref, getCurrentInstance } from "vue";
+import { ref } from "vue";
 
 import * as Yup from "yup";
 
@@ -9,9 +9,6 @@ import api from "../../../plugins/axios";
 
 const pix = ref("");
 const m_ticket_url = ref("");
-
-const app = getCurrentInstance()
-const socket = app.appContext.config.globalProperties.$socket
 
 const schema = Yup.object().shape({
     balance: Yup.number("Precisa ser um numero").required(
@@ -35,36 +32,37 @@ async function onSubmit(values, { setErrors }) {
     }
 }
 
-socket.on("new-deposit", data => {
-        console.log("socketModal: ",data);
-    })
-
 </script>
 <template>
-   <div class="w-100 p-2">
+   <div class="w-50 p-2">
         <div>
-            <div class="">
+        <div class="d-flex flex-column align-items-center justify-content-center mb-6">
+            <img src="../../../assets/images/coringa-games_logo.png" alt="" srcset="">
+            <p class="mt-4 font-monospace" style="font-weight: 700;">QUANTOS VAI DEPOSITAR?</p>
+         </div>
+            <div class="mt-2">
                 <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }"
                     class="flex flex-col w-full">
                     <Field name="balance" type="number" :class="{ 'bg-danger': errors.balance }" class="w-100 form-control-lg" />
-                    <div class="invalid-feedback">{{ errors }}</div>
+                    <div class="invalid-feedback">{{  errors.balance }}</div>
 
                     <br />
-                    <button :disabled="isSubmitting" class="btn btn-success mt-2 w-100 ">
-                        <span v-show="isSubmitting">Carregando...</span>
-                        <span v-show="!isSubmitting">Depoistar</span>
+                    <button :disabled="isSubmitting" class="btn btn-success mt-2 w-100 text-uppercase ">
+                        <span v-if="isSubmitting">Carregando...</span>
+                        <span v-else>Depoistar</span>
                     </button>
 
                     <div v-if="errors.apiError">
                         {{ errors.apiError }}
                     </div>
-                </Form>
+
 
                 <div v-if="isSubmitting">Carregando...</div>
 
                 <div v-else>
-                    <div v-if="m_ticket_url" class="w-100">
-                        <img v-if="pix" class="img-thumbnail mt-5" :src="'data:image/jpeg;charset=utf-8;base64, ' + pix" />
+                    <div v-if="m_ticket_url" class="w-50">
+                    <p class="mt-5">Aponte a camera do seu banco, para fazer o pagamento</p>
+                        <img v-if="pix" class="img-thumbnail" :src="'data:image/jpeg;charset=utf-8;base64, ' + pix" />
 
                         <div class="mt-3">
                             <a v-if="m_ticket_url" :href="m_ticket_url" target="_blank" class="text-white mt-5">Abrir Pagina
@@ -73,7 +71,7 @@ socket.on("new-deposit", data => {
 
                     </div>
                 </div>
-
+            </Form>
             </div>
 
         </div>

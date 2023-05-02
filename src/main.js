@@ -22,7 +22,12 @@ const socketIo = VueSocketIO("http://192.168.0.111:4005")
 if (!socketIo.socket) {
     socketIo.connect();
 }
-console.log(socketIo);
+
+if(localStorage.getItem("sirius::user")) {
+    let email= JSON.parse(localStorage.getItem("sirius::user")).email
+    socketIo.emit("/user",email)
+}
+
 app.config.globalProperties.$socket = socketIo
 
 app.use(Toast)
