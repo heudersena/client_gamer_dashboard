@@ -1,4 +1,6 @@
 <script setup>
+import { toClipboard } from '@soerenmartius/vue3-clipboard'
+import { RouterLink } from "vue-router"
 import { useAsyncState } from "@vueuse/core"
 import { getCurrentInstance, onMounted, ref } from 'vue'
 import { useAuthStore } from "@/stores";
@@ -29,25 +31,35 @@ onMounted(() => {
 })
 
 const openOrClose = ref(false)
+const openOrCloseMenu = ref(false)
+const openOrCloseMenuTo = ref(true)
 function FnOpenOrClose() {
     openOrClose.value = !openOrClose.value
 }
+function FnOpenOrCloseMenu() {
+    openOrCloseMenu.value = !openOrCloseMenu.value
+}
+
+const value = ref('lorem')
 
 </script>
 <template>
     <!-- STARTNAV -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
+    <nav v-show="openOrCloseMenu" class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
         <div class="container-fluid">
-            <a class="navbar-brand" href="home.html"><img src="../../../assets/images/coringa-games_logo.png"
-                    class="logo-cliente" alt=""></a>
-            <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse"
+            <RouterLink to="/" class="navbar-brand">
+                <img src="../../../assets/images/coringa-games_logo.png" class="logo-cliente" alt="">
+            </RouterLink>
+            <button @click="FnOpenOrCloseMenu" class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" aria-current="page" href="home.html">Home</a></li>
+                    <!-- <li class="nav-item">
+                        <RouterLink to="/" class="navbar-brand">Home</RouterLink>
+                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="minha-conta_edit.html"><i class="fas fa-user-cog"></i>
                             Minha conta</a>
@@ -60,7 +72,42 @@ function FnOpenOrClose() {
                         <a @click="FnOpenOrClose" class="nav-link" href="#" data-bs-toggle="modal"
                             data-bs-target="#mais-cred"><i class="fas fa-coins"></i> Depósito</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#" @click="logout"><i class="fas fa-sign-out-alt"></i> SAIR</a>
+                    <li class="nav-item"><a class="nav-link" href="#" @click="logout"><i class="fas fa-sign-out-alt"></i>
+                            SAIR</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <nav v-show="!openOrCloseMenu" class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Main navigation">
+        <div class="container-fluid">
+            <RouterLink to="/" class="navbar-brand">
+                <img src="../../../assets/images/coringa-games_logo.png" class="logo-cliente" alt="">
+            </RouterLink>
+            <button @click="FnOpenOrCloseMenu" class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div v-show="openOrCloseMenu" class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- <li class="nav-item">
+                        <RouterLink to="/" class="navbar-brand">Home</RouterLink>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="minha-conta_edit.html"><i class="fas fa-user-cog"></i>
+                            Minha conta</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#saque-cred"><i
+                                class="fas fa-comment-dollar"></i> Saque</a>
+                    </li>
+                    <li class="nav-item">
+                        <a @click="FnOpenOrClose" class="nav-link" href="#" data-bs-toggle="modal"
+                            data-bs-target="#mais-cred"><i class="fas fa-coins"></i> Depósito</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#" @click="logout"><i class="fas fa-sign-out-alt"></i>
+                            SAIR</a>
                     </li>
                 </ul>
             </div>
@@ -76,10 +123,10 @@ function FnOpenOrClose() {
                 style="margin-top: 10px; margin-right: 5px; color: aliceblue !important; font-weight: 700;">X</button>
             <ModalDeposito />
         </div>
-        <div class="row">
+        <div class="row media-sm">
             <div class="col">
                 <div class="row">
-                    <div class="col-4 text-end d-flex justify-content-end">
+                    <div class="col-4 text-end d-flex justify-content-end me-perfil">
                         <div class="avatar">
                             <img src="../../../assets/images/avatar1.jpg" class="img-responsive">
                         </div>
@@ -119,19 +166,19 @@ function FnOpenOrClose() {
                 </div>
             </div>
             <!-- Listagem das movimentações -->
-            <div class="col-md-7 col-lg-7">
+            <div class="col-md-7 col-lg-7" id="dev-w-100">
                 <span v-if="isLoading">carregando..</span>
                 <!-- <div v-if="transaction" class="text-center text-uppercase ">você não possui nenhuma transção pendente</div> -->
                 <ul v-else class="lista-tabela">
                     <div v-if="Boolean(!transactions[0])" class="text-uppercase text-center">você não tem transações
                         pendentes.</div>
-                    <div v-else>
+                    <div v-else class="correr">
                         <li class="text-uppercase">
                             <div class="col-valor">Valor</div>
                             <div class="col-data">Data</div>
                             <div class="col-op">Operação</div>
                             <div class="col-status">Status</div>
-                            <div>Pagamento</div>
+                            <div></div>
                         </li>
                         <li v-for="(transaction, i) in transactions" :key="i">
                             <div class="col-valor">{{ MoedaBR(transaction?.balance) }}</div>
@@ -139,14 +186,35 @@ function FnOpenOrClose() {
                             <div class="col-op">{{ TypeTransaction(transaction?.type_transaction) }}</div>
                             <div class="col-status"><span class="badge bg-warning rounded-pill me-1"> {{
                                 StatusTransaction(transaction?.mercado_pago_transaction_status) }}</span></div>
-                                <div>  <a :href="transaction?.MercadoPago[0].m_ticket_url" target="_blank" rel="noopener noreferrer">Abrir</a> </div>
+                            <div> <a :href="transaction?.MercadoPago[0].m_ticket_url" target="_blank"
+                                    rel="noopener noreferrer">Abrir</a> </div>
                         </li>
                     </div>
                 </ul>
             </div>
+            <ul class="view-phone">
+                <li v-for="(transaction, i) in transactions" :key="i">
+                    <div>{{ MoedaBR(transaction?.balance) }}</div>
+                    <div>{{ DateTimeConvert(transaction?.created_at) }}</div>
+                    <div>{{ TypeTransaction(transaction?.type_transaction) }}</div>
+                    <div><span class="badge bg-warning rounded-pill me-1"> {{
+                        StatusTransaction(transaction?.mercado_pago_transaction_status) }}</span></div>
+                    <div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-sm bg-primary mt-3 text-uppercase"
+                                @click="toClipboard(value = transaction?.MercadoPago[0]?.m_qr_code)">Copy - código de pagamento PIX</button>
+                            <a :href="transaction?.MercadoPago[0].m_ticket_url" target="_blank">Abrir</a>
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
+
 
             <!-- Listagem das movimentações -->
         </div>
+
+
     </main>
 </template>
 
@@ -155,9 +223,73 @@ function FnOpenOrClose() {
     color: rgb(197, 197, 197) !important;
 }
 
+.view-phone {
+    visibility: hidden;
+}
+
+@media screen {}
+
+
+
+@media screen and (max-width: 991px) {
+    #dev-w-100 {
+        widows: 100% !important;
+    }
+
+    .lista-tabela {
+        position: absolute;
+    }
+
+    .view-phone {
+        visibility: visible;
+        padding: 0px 5px 0px 5px;
+        widows: 100%;
+    }
+
+    .view-phone li {
+        list-style: none;
+        /* border-bottom: 1px solid silver !important; */
+        background-color: rgb(9, 9, 9);
+
+        margin-bottom: 5px;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+    .view-phone li a {
+        background-color: rgb(21, 147, 9);
+        display: block;
+        margin-top: 4px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        padding: 4px;
+        border-radius: 4px;
+    }
+
+    .me-perfil {
+        visibility: hidden;
+        margin-top: -110px;
+        position: absolute;
+    }
+
+    .media-sm {
+        display: flex;
+        flex-direction: column !important;
+        padding-right: 1px;
+    }
+
+    .correr {
+        visibility: hidden;
+    }
+}
+
 .dev-custom {
     width: 100%;
     display: flex;
+    flex-direction: row;
     align-items: center !important;
     justify-content: center !important;
     background-color: blue;

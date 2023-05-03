@@ -3,6 +3,7 @@ import { createPinia } from 'pinia';
 import VueSocketIO from 'socket.io-client'
 import Toast from "vue-toastification";
 import { VueQueryPlugin } from "vue-query";
+import { VueClipboard } from '@soerenmartius/vue3-clipboard'
 import "vue-toastification/dist/index.css";
 
 import './assets/css/bootstrap.min.css'
@@ -34,4 +35,5 @@ app.use(Toast)
 app.use(createPinia());
 app.use(router);
 app.use(VueQueryPlugin)
+app.use(VueClipboard)
 app.mount('#app');

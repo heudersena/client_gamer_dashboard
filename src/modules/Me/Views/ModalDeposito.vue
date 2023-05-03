@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { toClipboard } from '@soerenmartius/vue3-clipboard'
 
 import * as Yup from "yup";
 
@@ -10,11 +11,23 @@ import api from "../../../plugins/axios";
 const pix = ref("");
 const m_ticket_url = ref("");
 
+const sizeScreen = ref(window.screen)
+
+
+
 const schema = Yup.object().shape({
     balance: Yup.number("Precisa ser um numero").required(
         "Digite um valor para fazer deposito"
     ),
 });
+
+
+console.log(sizeScreen.value);
+onMounted(()=>{
+
+    console.log(sizeScreen.value);
+})
+
 
 async function onSubmit(values, { setErrors }) {
     const { balance } = values;
@@ -33,8 +46,17 @@ async function onSubmit(values, { setErrors }) {
 }
 
 </script>
+
+<style scoped>
+
+    div{
+        height:sizeScreen
+    }
+
+</style>
+
 <template>
-   <div class="w-50 p-2">
+   <div class="w-25 p-2" :style=" +'height:'+sizeScreen.availHeight+';'" >
         <div>
         <div class="d-flex flex-column align-items-center justify-content-center mb-6">
             <img src="../../../assets/images/coringa-games_logo.png" alt="" srcset="">

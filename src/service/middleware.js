@@ -35,10 +35,10 @@ export default {
         } else {
             const token_decod = jwt(user.data?.request?.token)
 
-            if (Date.now() >= token_decod.exp * 1000) {
-                n = { name: "login" }
-                localStorage.clear()
-            }
+            // if (Date.now() >= token_decod.exp * 1000) {
+            //     n = { name: "login" }
+            //     localStorage.clear()
+            // }
 
             if (!auth.authenticated()) {
                 n = { name: "login" }
