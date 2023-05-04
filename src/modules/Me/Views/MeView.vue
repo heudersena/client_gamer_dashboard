@@ -10,6 +10,7 @@ import { TypeTransaction } from "../../../plugins/enums/TypeTransaction"
 import { MoedaBR } from "../../../plugins/convertToMoedaAndDate"
 import { DateTimeConvert } from "../../../plugins/DateTimeConvert"
 import ModalDeposito from "./ModalDeposito.vue"
+import ModalSaque from "./ModalSaque.vue"
 import { useAuth } from "../../../composables/useAuth"
 
 const { users } = useAuth()
@@ -33,6 +34,13 @@ onMounted(() => {
 const openOrClose = ref(false)
 const openOrCloseMenu = ref(false)
 const openOrCloseMenuTo = ref(true)
+
+const openOrCloseModalSaque = ref(false)
+function FnOpenOrCloseModalSaque() {
+    console.log(new Date().toTimeString());
+    openOrCloseModalSaque.value = !openOrCloseModalSaque.value
+}
+
 function FnOpenOrClose() {
     openOrClose.value = !openOrClose.value
 }
@@ -40,7 +48,7 @@ function FnOpenOrCloseMenu() {
     openOrCloseMenu.value = !openOrCloseMenu.value
 }
 
-const value = ref('lorem')
+const value = ref('')
 
 </script>
 <template>
@@ -61,12 +69,12 @@ const value = ref('lorem')
                         <RouterLink to="/" class="navbar-brand">Home</RouterLink>
                     </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="minha-conta_edit.html"><i class="fas fa-user-cog"></i>
+                        <a class="nav-link" aria-current="page" href="#"><i class="fas fa-user-cog"></i>
                             Minha conta</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#saque-cred"><i
-                                class="fas fa-comment-dollar"></i> Saque</a>
+                        <a class="nav-link" @click="FnOpenOrCloseModalSaque" data-bs-toggle="modal"
+                            data-bs-target="#saque-cred"><i class="fas fa-comment-dollar"></i> Saque</a>
                     </li>
                     <li class="nav-item">
                         <a @click="FnOpenOrClose" class="nav-link" href="#" data-bs-toggle="modal"
@@ -95,12 +103,12 @@ const value = ref('lorem')
                         <RouterLink to="/" class="navbar-brand">Home</RouterLink>
                     </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="minha-conta_edit.html"><i class="fas fa-user-cog"></i>
+                        <a class="nav-link" aria-current="page" href="#"><i class="fas fa-user-cog"></i>
                             Minha conta</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#saque-cred"><i
-                                class="fas fa-comment-dollar"></i> Saque</a>
+                        <a class="nav-link" style="cursor: pointer;" @click="FnOpenOrCloseModalSaque" data-bs-toggle="modal"
+                            data-bs-target="#saque-cred"><i class="fas fa-comment-dollar"></i> Saque</a>
                     </li>
                     <li class="nav-item">
                         <a @click="FnOpenOrClose" class="nav-link" href="#" data-bs-toggle="modal"
@@ -114,7 +122,14 @@ const value = ref('lorem')
         </div>
     </nav>
     <!-- ENDNAV -->
-
+        <div v-if="openOrCloseModalSaque" class="">
+            <div @click="FnOpenOrCloseModalSaque" style="background-color: #513d29; cursor: pointer;">
+                <sapn class="dev-btn">
+                    FECHAR
+                </sapn>
+            </div>
+            <ModalSaque />
+        </div>
     <main class="container mt-5">
         <div v-if="openOrClose"
             class="position-absolute min-vh-100  w-100 top-0  end-0 bottom-0 d-flex flex-column justify-content-center align-items-center"
@@ -122,13 +137,15 @@ const value = ref('lorem')
             <button @click="FnOpenOrClose" class="position-absolute top-0 end-0 btn text-white"
                 style="margin-top: 10px; margin-right: 5px; color: aliceblue !important; font-weight: 700;">X</button>
             <ModalDeposito />
+
         </div>
+
         <div class="row media-sm">
             <div class="col">
                 <div class="row">
                     <div class="col-4 text-end d-flex justify-content-end me-perfil">
                         <div class="avatar">
-                            <img src="../../../assets/images/avatar1.jpg" class="img-responsive">
+                            <img :src="'https://ui-avatars.com/api/?name='+users?.first_name +' '+ users?.second_name" class="img-responsive">
                         </div>
                     </div>
                     <div class="col">
@@ -202,7 +219,8 @@ const value = ref('lorem')
                     <div>
                         <div class="d-grid gap-2">
                             <button class="btn btn-sm bg-primary mt-3 text-uppercase"
-                                @click="toClipboard(value = transaction?.MercadoPago[0]?.m_qr_code)">Copy - código de pagamento PIX</button>
+                                @click="toClipboard(value = transaction?.MercadoPago[0]?.m_qr_code)">Copy - código de
+                                pagamento PIX</button>
                             <a :href="transaction?.MercadoPago[0].m_ticket_url" target="_blank">Abrir</a>
                         </div>
                     </div>
@@ -219,6 +237,28 @@ const value = ref('lorem')
 </template>
 
 <style scoped>
+.dev-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    background-color: rgb(165, 57, 57);
+    margin-top: 2px;
+}
+
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
 * {
     color: rgb(197, 197, 197) !important;
 }

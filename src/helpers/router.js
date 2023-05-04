@@ -27,18 +27,7 @@ export const router = createRouter({
                     path: "",
                     name: "index",
                     component: MeView
-                },
-                {
-                    path: "/deposit",
-                    name: "deposit",
-                    component: DespositView
-                },
-                {
-                    path: "/saque",
-                    name: "saque",
-                    component: SaqueView
                 }
-
             ]
         },
         {

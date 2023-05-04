@@ -29,7 +29,7 @@ export default {
 
         setUsers(user.data?.user?.data)
 
-        if (user.data?.request?.error == true) {
+        if (user.data?.error == true) {
             n = { name: "login" }
             localStorage.clear()
         } else {
